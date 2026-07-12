@@ -13,7 +13,6 @@ from fastapi import APIRouter, Request, Form, UploadFile, File, HTTPException, D
 from fastapi.responses import HTMLResponse, FileResponse, JSONResponse, RedirectResponse
 
 from modules.dev_studio.visual_editor import router as visual_router, visual_editor_root
-# from tools.git_manager.router import render_panel_for_module as gm_render_panel
 
 DATA_DIR = Path("./data/dev_studio")
 CODE_EDITOR_ROOT = pathlib.Path(os.getenv("CODE_EDITOR_ROOT", os.getcwd())).resolve()
@@ -255,22 +254,18 @@ async def studio_main(request: Request):
         </div>
         <div id="launcher-panel" {UI.htmx_html({"get":f"{_P}/launcher_tree","trigger":"load, launcherRefresh from:body","target":"this"})} style="flex:1;overflow:auto;font-size:0.82rem;"></div>
     </div>"""
-    right_bar = f"""<div id="right-sidebar-outer" hx-get="{_P}/right_sidebar/state" hx-trigger="load" hx-target="this"></div>"""
+    #right_bar = f"""<div id="right-sidebar-outer" hx-get="{_P}/right_sidebar/state" hx-trigger="load" hx-target="this"></div>"""
 
     # Need to add in the save all - title and other status parts *****************************************************************
     top_bar_content = f'<div id="studio-tab-bar-wrap" style="height:100%;">{tab_bar_html}</div>'
     right_bar = f"""<div id="right-sidebar-mount" hx-get="{_P}/right_sidebar/logs" hx-trigger="load" hx-target="this" style="height:100%;overflow:hidden;display:flex;flex-direction:column;"></div>"""
     return ENV["templates"].TemplateResponse(name = "base.html", request = request, context = {
-        "request": request,
-        "user": request.state.user,
-        "nesting_level": 1,
-        "code_mirror": True,
+        "request": request, "user": request.state.user, "nesting_level": 1, "code_mirror": True,
         "toolbars": {"top": UI.toolbar(side="top", content=top_bar_content, size="3rem", overlay=False, nesting_level=1, start_open=True, locked=True),
                      "left": UI.toolbar(side="left", content=left_bar, size="16rem", overlay=False, nesting_level=1, start_open=False, locked=False, resizable=True),
-                     "right": UI.toolbar(side="right", content=right_bar, size="16rem", overlay=False, nesting_level=1, start_open=True, locked=False, resizable=True)},
+                     "right": UI.toolbar(side="right", content=right_bar, size="16rem", overlay=False, nesting_level=1, start_open=False, locked=False, resizable=True)},
         "content": f'<div id="studio-content-wrap"><div id="editor-stack">{file_content_html}</div></div><div id="dev-new-modal"></div>',
-        "extra_css": studio_style, # + CM.CSS,
-        "extra_script": ENV["tools"]["built_ins"].PORTAL_EDITOR_JS})
+        "extra_css": studio_style, "extra_script": ENV["tools"]["built_ins"].PORTAL_EDITOR_JS})
 
 # --- File Tree / Launcher ---
 
