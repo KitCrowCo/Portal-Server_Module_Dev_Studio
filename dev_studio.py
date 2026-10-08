@@ -265,7 +265,7 @@ async def studio_main(request: Request):
                      "left": UI.toolbar(side="left", content=left_bar, size="16rem", overlay=False, nesting_level=1, start_open=False, locked=False, resizable=True),
                      "right": UI.toolbar(side="right", content=right_bar, size="16rem", overlay=False, nesting_level=1, start_open=False, locked=False, resizable=True)},
         "content": f'<div id="studio-content-wrap"><div id="editor-stack">{file_content_html}</div></div><div id="dev-new-modal"></div>',
-        "extra_css": studio_style, "extra_script": ENV["tools"]["built_ins"].PORTAL_EDITOR_JS})
+        "extra_css": studio_style + CM.CSS, "extra_script": ENV["tools"]["built_ins"].PORTAL_EDITOR_JS})
 
 # --- File Tree / Launcher ---
 
@@ -494,9 +494,9 @@ async def debug_logs():
     msg = {"id": "logtail", "role": "system", "content": f"```\n{logs}\n```", "user_name": "", "timestamp": ""}
     rendered = CM.render_messages([msg], viewer_name="")
     return HTMLResponse(f"""<div style="flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden;">
-        <div style="padding:0.25rem 0.5rem;flex-shrink:0;display:flex;justify-content:space-between;align-items:center;background:var(--surface);border-bottom:var(--board-thick) solid var(--border);">
-            <span style="color:var(--accent);font-size:.78rem;">Logs &mdash; <span style="color:var(--text_muted);">{UI.escape(server_name)}/{UI.escape(cid)}</span> <span style="font-size:0.6rem;opacity:0.6;">[{UI.escape(log_source)}]</span></span>
-            <button class="ui-btn" style="font-size:0.65rem;padding:0.1rem 0.3rem;" hx-get="{_P}/debug_logs" hx-target="#debug-logs-inner" hx-swap="innerHTML">&#x21BA;</button>
+        <div style="padding:0.2rem 0.2rem;flex-shrink:0;display:flex;justify-content:space-between;align-items:center;background:var(--surface);border-bottom:var(--border-thick) solid var(--border);">
+            <span style="color:var(--accent);font-size:.7rem;">Logs &mdash; <span style="color:var(--text_muted);">{UI.escape(server_name)}/{UI.escape(cid)}</span> <span style="font-size:0.6rem;opacity:0.6;">[{UI.escape(log_source)}]</span></span>
+            <button class="ui-btn" style="font-size:0.6rem;padding:0.1rem 0.3rem;" hx-get="{_P}/debug_logs" hx-target="#debug-logs-inner" hx-swap="innerHTML">&#x21BA;</button>
         </div>
         <div id="dev-logs-msgs" class="cm-msgs cm-s-log" data-pinned="true" style="flex:1;min-height:0;font-family:var(--font-mono);font-size:.7rem;">{rendered}</div>
     </div>
