@@ -152,7 +152,7 @@ async def _render_active_tab_html(request, state: dict):
 
 async def _render_file_page(request: Request, path: str, state: dict = None) -> HTMLResponse:
     """Render file content fragment for #editor-stack. Plain HTMLResponse, no template shell."""
-    if not path or path.startswith("untitled"): return HTMLResponse(_LAUNCHER_HTML)
+    if not path or path.startswith("untitled") or path == "/launcher": return HTMLResponse(_LAUNCHER_HTML)   # "/launcher" is the tab the TabManager makes when the last tab closes - here the start view, not a file
     if path.startswith("design://"): return await visual_editor_root(path.replace("design://",""))
     if path.startswith("console://"): return HTMLResponse('<div style="padding:2rem;color:#ff5f5f;">Console not yet integrated</div>')
     if not state: state = await dev_state(request)
